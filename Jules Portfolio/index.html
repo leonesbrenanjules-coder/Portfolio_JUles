@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jules Brenan R. Leones — Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #1a1a24;
+  --border: #2a2a3a;
+  --accent: #00d4a0;
+  --accent2: #7b6ef6;
+  --accent3: #ff6b6b;
+  --text: #e8e8f0;
+  --muted: #6b6b85;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 60px;
+}
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 0; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 60px;
+  display: flex; align-items: center;
+  border-left: 1px solid var(--border);
+  transition: color 0.2s, background 0.2s;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.nav-links a:last-child { border-right: 1px solid var(--border); }
+.nav-links a:hover, .nav-links a.active { color: var(--accent); background: rgba(0,212,160,0.04); }
+
+/* ---- PAGES ---- */
+.page { display: none; padding-top: 60px; min-height: 100vh; }
+.page.active { display: block; }
+
+/* ---- HOME ---- */
+.hero {
+  min-height: calc(100vh - 60px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: 
+    linear-gradient(rgba(0,212,160,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,160,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.hero-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--accent);
+}
+.hero h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.25rem;
+}
+.hero h1 .name-line { display: block; }
+.hero h1 .accent-line { color: var(--accent); }
+.hero-sub {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--muted);
+  margin: 1.5rem 0 2.5rem;
+  max-width: 560px;
+  line-height: 1.8;
+}
+.hero-sub .hl { color: var(--text); }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.75rem 1.75rem;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0a0a0f;
+}
+.btn-primary:hover { background: transparent; color: var(--accent); }
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.stack-row {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 4rem;
+}
+.stack-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.75rem;
+  letter-spacing: 0.05em;
+}
+.stack-tag.fe { border-color: rgba(123,110,246,0.4); color: #9b8ef8; }
+.stack-tag.be { border-color: rgba(0,212,160,0.3); color: var(--accent); }
+.stack-tag.db { border-color: rgba(255,107,107,0.3); color: #ff8f8f; }
+
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 2.5rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.scroll-hint::after {
+  content: '';
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--muted), transparent);
+}
+
+/* ---- SECTION BASE ---- */
+.section { padding: 5rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.section-label::before { content: '//'; color: var(--muted); }
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+  line-height: 1.1;
+}
+.section-title em { font-style: normal; color: var(--accent); }
+
+/* ---- SERVICE ---- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.service-card {
+  background: var(--surface);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+.service-card:hover { background: var(--surface2); }
+.service-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+}
+.service-icon {
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  display: block;
+}
+.service-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.service-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-family: var(--mono);
+}
+.service-accent {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px;
+  background: var(--accent);
+  width: 0;
+  transition: width 0.3s ease;
+}
+.service-card:hover .service-accent { width: 100%; }
+
+/* ---- PORTFOLIO ---- */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+.project-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.project-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid;
+}
+.type-fs { color: var(--accent); border-color: rgba(0,212,160,0.3); background: rgba(0,212,160,0.05); }
+.type-ui { color: #9b8ef8; border-color: rgba(123,110,246,0.3); background: rgba(123,110,246,0.05); }
+.type-web { color: #ff8f8f; border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05); }
+.project-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.project-card p {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+.project-stack {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.tech-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.05em;
+}
+.project-arrow {
+  font-size: 1.2rem;
+  color: var(--border);
+  transition: color 0.2s;
+}
+.project-card:hover .project-arrow { color: var(--accent); }
+
+/* ---- ABOUT ---- */
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .hero h1 { font-size: 2.8rem; }
+  nav { padding: 0 1rem; }
+  .nav-links a { padding: 0 0.6rem; font-size: 11px; }
+  .hero, .section { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+.about-bio p {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.about-bio p strong { color: var(--text); font-weight: 400; }
+.about-bio .highlight {
+  display: inline-block;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(0,212,160,0.3);
+}
+
+.about-details { display: flex; flex-direction: column; gap: 2.5rem; }
+.detail-block {}
+.detail-block h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.skills-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.skill-item {}
+.skill-top {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 12px;
+  margin-bottom: 0.4rem;
+}
+.skill-top span:first-child { color: var(--text); }
+.skill-top span:last-child { color: var(--muted); }
+.skill-bar {
+  height: 2px;
+  background: var(--surface2);
+  position: relative;
+}
+.skill-fill {
+  height: 100%;
+  background: var(--accent);
+  position: relative;
+}
+.skill-fill::after {
+  content: '';
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 5px; height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.tool-item {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0.6rem 0.75rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.tool-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+}
+
+.objective-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.objective-list li {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding-left: 1.25rem;
+  position: relative;
+}
+.objective-list li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--accent);
+}
+
+/* ---- CONTACT ---- */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+}
+.contact-intro p {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+.contact-links { display: flex; flex-direction: column; gap: 1px; }
+.contact-link {
+  display: flex; align-items: center; gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 1px;
+}
+.contact-link:hover { border-color: var(--accent); background: var(--surface2); }
+.contact-link-icon {
+  width: 36px; height: 36px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.contact-link-info {}
+.contact-link-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.contact-link-value {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+}
+.contact-link:hover .contact-link-value { color: var(--accent); }
+
+.contact-form-side h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { min-height: 100px; }
+
+/* ---- FOOTER ---- */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+footer p {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+footer span { color: var(--accent); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ---- ANIMATIONS ---- */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.cursor { animation: blink 1s step-end infinite; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page.active .hero h1 { animation: fadeUp 0.6s ease both; }
+.page.active .hero-sub { animation: fadeUp 0.6s 0.1s ease both; }
+.page.active .hero-actions { animation: fadeUp 0.6s 0.2s ease both; }
+.page.active .stack-row { animation: fadeUp 0.6s 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <span>~/</span>jules-leones<span class="cursor">_</span>
+  </a>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a>
+    <a href="#" onclick="showPage('service')" id="nav-service">Services</a>
+    <a href="#" onclick="showPage('portfolio')" id="nav-portfolio">Portfolio</a>
+    <a href="#" onclick="showPage('about')" id="nav-about">About</a>
+    <a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-tag">Full Stack Developer &amp; Designer</div>
+    <h1>
+      <span class="name-line">Jules Brenan</span>
+      <span class="name-line accent-line">R. Leones</span>
+    </h1>
+    <p class="hero-sub">
+      Building <span class="hl">end-to-end digital experiences</span> — from pixel-perfect interfaces to scalable backends. 
+      Currently studying at <span class="hl">Davao del Norte State College</span>, turning ideas into working software.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#" onclick="showPage('portfolio')">View Projects →</a>
+      <a class="btn btn-ghost" href="#" onclick="showPage('contact')">Get in Touch</a>
+    </div>
+    <div class="stack-row">
+      <span class="stack-tag fe">React</span>
+      <span class="stack-tag fe">TypeScript</span>
+      <span class="stack-tag fe">HTML/CSS</span>
+      <span class="stack-tag be">Laravel</span>
+      <span class="stack-tag be">PHP</span>
+      <span class="stack-tag db">MySQL</span>
+      <span class="stack-tag">Figma</span>
+      <span class="stack-tag">Canva</span>
+    </div>
+    <div class="scroll-hint">scroll to explore</div>
+  </div>
+
+  <div class="section" style="padding-top: 0;">
+    <div class="section-label">What I do</div>
+    <div class="section-title">Core <em>capabilities</em></div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01 — FRONTEND</div>
+        <span class="service-icon">⬡</span>
+        <h3>UI / Web Design</h3>
+        <p>Responsive, accessible interfaces with clean code. React, HTML/CSS, and design systems that scale.</p>
+        <div class="service-accent"></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02 — BACKEND</div>
+        <span class="service-icon">⬡</span>
+        <h3>Server-side Development</h3>
+        <p>Laravel and PHP backends, REST APIs, authentication flows, and database architecture with MySQL.</p>
+        <div class="service-accent"></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03 — DESIGN</div>
+        <span class="service-icon">⬡</span>
+        <h3>Graphic &amp; App Design</h3>
+        <p>From Figma prototypes to Canva graphics — branding, app layouts, and marketing materials.</p>
+        <div class="service-accent"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 <span>Jules Brenan R. Leones</span></p>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('portfolio')">Portfolio</a>
+      <a href="#" onclick="showPage('about')">About</a>
+      <a href="#" onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== SERVICE ===================== -->
+<div class="page" id="page-service">
+  <div class="section">
+    <div class="section-label">What I offer</div>
+    <div class="section-title">Services &amp; <em>expertise</em></div>
+    <div class="services-grid" style="margin-bottom:3rem;">
+      <div class="service-card">
+        <div class="service-num">01 — DESIGN</div>
+        <span class="service-icon">✦</span>
+        <h3>Graphic Design</h3>
+        <p>Visually impactful designs tailored to your brand — logos, marketing materials, social graphics, and visual identity systems that make your brand stand out.</p>
+        <div class="service-accent"></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02 — WEB</div>
+        <span class="service-icon">✦</span>
+        <h3>Web Design &amp; Development</h3>
+        <p>Clean, responsive, and user-friendly websites that deliver great experiences across all devices. Built with modern HTML/CSS and JavaScript for performance and accessibility.</p>
+        <div class="service-accent"></div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03 — APP</div>
+        <span class="service-icon">✦</span>
+        <h3>App Design &amp; Prototyping</h3>
+        <p>Intuitive and engaging app interfaces in Figma, focused on usability and aesthetics — from wireframes to interactive prototypes ready for development handoff.</p>
+        <div class="service-accent"></div>
+      </div>
+    </div>
+
+    <div class="section-label">How I work</div>
+    <div class="section-title">The <em>process</em></div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1px; background:var(--border); border:1px solid var(--border);">
+      <div style="background:var(--surface); padding:2rem;">
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--accent); margin-bottom:1rem;">01</div>
+        <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.5rem;">Discover</h4>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.7;">Understand goals, users, and constraints before writing a single line of code.</p>
+      </div>
+      <div style="background:var(--surface); padding:2rem;">
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--accent); margin-bottom:1rem;">02</div>
+        <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.5rem;">Design</h4>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.7;">Wireframes and prototypes in Figma to validate ideas quickly before building.</p>
+      </div>
+      <div style="background:var(--surface); padding:2rem;">
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--accent); margin-bottom:1rem;">03</div>
+        <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.5rem;">Build</h4>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.7;">Full-stack implementation — clean, documented code with proper version control.</p>
+      </div>
+      <div style="background:var(--surface); padding:2rem;">
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--accent); margin-bottom:1rem;">04</div>
+        <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.5rem;">Deliver</h4>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.7;">Tested, deployed product with documentation and support for smooth handoff.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 <span>Jules Brenan R. Leones</span></p>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== PORTFOLIO ===================== -->
+<div class="page" id="page-portfolio">
+  <div class="section">
+    <div class="section-label">Selected work</div>
+    <div class="section-title">Projects &amp; <em>builds</em></div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-type type-fs">Full Stack</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <h3>StudyNest — School Management System</h3>
+        <p>A comprehensive platform for managing students, teachers, schedules, and grades. Built with a Laravel backend, MySQL database, and a clean React frontend with role-based access control.</p>
+        <div class="project-stack">
+          <span class="tech-pill">Laravel</span>
+          <span class="tech-pill">PHP</span>
+          <span class="tech-pill">React</span>
+          <span class="tech-pill">MySQL</span>
+          <span class="tech-pill">REST API</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-type type-fs">Full Stack</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <h3>Payroll Management System</h3>
+        <p>Automated payroll processing system handling employee records, salary computation, deductions, and payslip generation. Features admin dashboard with reporting and export.</p>
+        <div class="project-stack">
+          <span class="tech-pill">PHP</span>
+          <span class="tech-pill">MySQL</span>
+          <span class="tech-pill">HTML/CSS</span>
+          <span class="tech-pill">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-type type-web">Web Design</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <h3>Responsive Web Design Project</h3>
+        <p>Multi-page responsive website built from scratch — mobile-first layout, custom CSS animations, and semantic HTML ensuring cross-browser compatibility and accessibility.</p>
+        <div class="project-stack">
+          <span class="tech-pill">HTML5</span>
+          <span class="tech-pill">CSS3</span>
+          <span class="tech-pill">JavaScript</span>
+          <span class="tech-pill">Responsive</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-type type-ui">App Design</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <h3>Mobile App UI/UX Design</h3>
+        <p>End-to-end app design in Figma — user research, wireframes, high-fidelity mockups, and interactive prototype. Designed for intuitive navigation and visual clarity.</p>
+        <div class="project-stack">
+          <span class="tech-pill">Figma</span>
+          <span class="tech-pill">UI/UX</span>
+          <span class="tech-pill">Prototyping</span>
+          <span class="tech-pill">User Research</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-type type-ui">Graphic Design</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <h3>Brand Identity &amp; Marketing Materials</h3>
+        <p>Visual design work spanning logos, social media graphics, posters, and brand assets. Created using Canva and Figma with a focus on consistency and visual impact.</p>
+        <div class="project-stack">
+          <span class="tech-pill">Canva</span>
+          <span class="tech-pill">Figma</span>
+          <span class="tech-pill">Branding</span>
+          <span class="tech-pill">Typography</span>
+        </div>
+      </div>
+
+      <div class="project-card" style="border-style: dashed; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:200px; text-align:center;">
+        <p style="font-family:var(--mono); font-size:13px; color:var(--muted); margin-bottom:1rem;">More projects coming soon</p>
+        <a class="btn btn-ghost" href="#" onclick="showPage('contact')" style="font-size:11px;">Start a project →</a>
+      </div>
+
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 <span>Jules Brenan R. Leones</span></p>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<div class="page" id="page-about">
+  <div class="section">
+    <div class="section-label">Get to know me</div>
+    <div class="section-title">About <em>Jules</em></div>
+    <div class="about-layout">
+      <div class="about-bio">
+        <p>Hi! I'm <strong>Jules Brenan R. Leones</strong>, a college student at <strong>Davao del Norte State College</strong> studying information technology with a focus on full-stack development and design.</p>
+        <p>I build things for the web — from backend systems in <strong>Laravel and PHP</strong> to interfaces designed in <strong>Figma</strong> and brought to life with <strong>HTML, CSS, and React</strong>.</p>
+        <p>My creative process is shaped by <span class="highlight">anime and film</span> — I find that the best visual storytelling translates directly into better UI decisions and more thoughtful system design.</p>
+        <p>I'm looking to grow as a developer, contribute to exciting projects, and collaborate with teams who care about both <strong>code quality</strong> and <strong>user experience</strong>.</p>
+
+        <div style="margin-top:2rem;">
+          <div class="section-label" style="margin-bottom:1rem;">Objective</div>
+          <ul class="objective-list">
+            <li>Seeking an opportunity to apply development and design skills in a position that provides room for growth and real-world impact.</li>
+            <li>Enthusiastic about contributing to fast-moving teams where creativity and technical skill intersect.</li>
+            <li>Open to internships, freelance projects, and collaborative builds.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="about-details">
+        <div class="detail-block">
+          <h4>Technical skills</h4>
+          <div class="skills-list">
+            <div class="skill-item">
+              <div class="skill-top"><span>HTML / CSS</span><span>90%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>PHP / Laravel</span><span>75%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>JavaScript / React</span><span>70%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>MySQL</span><span>72%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:72%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>Figma</span><span>85%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-top"><span>Graphic Design</span><span>80%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-block">
+          <h4>Tools &amp; environment</h4>
+          <div class="tools-grid">
+            <div class="tool-item"><div class="tool-dot"></div>Figma</div>
+            <div class="tool-item"><div class="tool-dot"></div>Canva</div>
+            <div class="tool-item"><div class="tool-dot"></div>VS Code</div>
+            <div class="tool-item"><div class="tool-dot"></div>MySQL</div>
+            <div class="tool-item"><div class="tool-dot"></div>Gmail</div>
+            <div class="tool-item"><div class="tool-dot"></div>Google Docs</div>
+            <div class="tool-item"><div class="tool-dot"></div>GitHub</div>
+            <div class="tool-item"><div class="tool-dot"></div>Postman</div>
+          </div>
+        </div>
+
+        <div class="detail-block">
+          <h4>Soft skills</h4>
+          <div class="tools-grid">
+            <div class="tool-item" style="--tool-c:#9b8ef8;"><div class="tool-dot" style="background:#9b8ef8"></div>Teamwork</div>
+            <div class="tool-item" style="--tool-c:#9b8ef8;"><div class="tool-dot" style="background:#9b8ef8"></div>Multitasking</div>
+            <div class="tool-item" style="--tool-c:#9b8ef8;"><div class="tool-dot" style="background:#9b8ef8"></div>Communication</div>
+            <div class="tool-item" style="--tool-c:#9b8ef8;"><div class="tool-dot" style="background:#9b8ef8"></div>Creativity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 <span>Jules Brenan R. Leones</span></p>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('contact')">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== CONTACT ===================== -->
+<div class="page" id="page-contact">
+  <div class="section">
+    <div class="section-label">Let's work together</div>
+    <div class="section-title">Get in <em>touch</em></div>
+    <div class="contact-layout">
+      <div class="contact-intro">
+        <p>Whether you want to start a project, ask about my work, or just say hi — I'd love to hear from you. I'm open to freelance work, collaborations, and internship opportunities.</p>
+
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:leones.brenanjules@dnsc.edu.ph">
+            <div class="contact-link-icon">✉</div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Email</div>
+              <div class="contact-link-value">leones.brenanjules@dnsc.edu.ph</div>
+            </div>
+          </a>
+          <a class="contact-link" href="tel:09608314130">
+            <div class="contact-link-icon">☎</div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Phone</div>
+              <div class="contact-link-value">09608314130</div>
+            </div>
+          </a>
+          <a class="contact-link" href="https://www.facebook.com/share/1AkqWCoxY6/" target="_blank">
+            <div class="contact-link-icon">f</div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Facebook</div>
+              <div class="contact-link-value">Jules Brenan R. Leones</div>
+            </div>
+          </a>
+          <div class="contact-link" style="cursor:default;">
+            <div class="contact-link-icon">📍</div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Location</div>
+              <div class="contact-link-value">Davao del Norte, Philippines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-side">
+        <h3>Send a message</h3>
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" placeholder="e.g. Maria Santos">
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" placeholder="you@email.com">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="Project inquiry, collaboration...">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell me about your project or question..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="handleSend()">
+          Send Message →
+        </button>
+        <div id="send-confirm" style="display:none; margin-top:1rem; font-family:var(--mono); font-size:12px; color:var(--accent); border:1px solid rgba(0,212,160,0.3); padding:0.75rem 1rem; background:rgba(0,212,160,0.05);">
+          ✓ Message sent! I'll get back to you soon.
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 <span>Jules Brenan R. Leones</span></p>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('portfolio')">Portfolio</a>
+      <a href="#" onclick="showPage('service')">Services</a>
+      <a href="#" onclick="showPage('about')">About</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  return false;
+}
+function handleSend() {
+  document.getElementById('send-confirm').style.display = 'block';
+}
+</script>
+</body>
+</html>
